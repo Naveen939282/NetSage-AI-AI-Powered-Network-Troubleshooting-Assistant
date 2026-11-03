@@ -1,0 +1,82 @@
+{
+  "demo_cases": [
+    {
+      "case_id": "NETSAGE-001",
+      "category": "VLAN",
+      "title": "Wrong access VLAN assigned to host port",
+      "symptom": "PC-A (192.168.20.10/24) cannot reach servers in VLAN 20. The host replies to ping within its own IP but cannot reach 192.168.20.2. PC-A should be in the SERVERS VLAN (20).",
+      "topology": "PC-A -- Gi0/2 -- SwitchA -- Gi0/1 -- RouterB. Intended: PC-A belongs to VLAN 20 (SERVERS).",
+      "show_output": "show vlan brief\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -----------------------------\n1    default                          active\n10   USERS                            active    Fa0/2 Fa0/3\n20   SERVERS                          active    Fa0/5\n\nshow interfaces status\nPort      Name               Status       Vlan       Duplex Speed   Type\nGi0/1     trunk-to-RouterB   connected    trunk      a-full  a-1000  1000BaseSX\nGi0/2     to-PC-A            connected    10         a-full  a-1000\nGi0/3                        connected    10         a-full  a-1000\nGi0/5                        connected    20         a-full  a-1000\n\nshow interfaces switchport\nName               : Gi0/2\nSwitchport Mode      : access\nAccess Mode VLAN     : 10\n",
+      "expected_fault": "Port Gi0/2 is assigned to access VLAN 10 (USERS) instead of VLAN 20 (SERVERS)",
+      "expected_command": "show interfaces Gi0/2 status",
+      "expected_fix": "On SwitchA, enter interface Gi0/2 and run: switchport access vlan 20",
+      "difficulty": "easy"
+    },
+    {
+      "case_id": "NETSAGE-020",
+      "category": "Routing",
+      "title": "OSPF neighbor stuck in INIT (area mismatch)",
+      "symptom": "Routes are not being learned via OSPF; the neighbor stays in a non-FULL state.",
+      "topology": "RouterA and RouterB form an OSPF adjacency that never reaches FULL due to an area mismatch.",
+      "show_output": "show ip ospf neighbor\nNeighbor ID     Pri   State           Dead Time   Interface ID    Interface\n10.0.0.2        128   INIT/DROTHER    00:00:05    3               Ethernet0/0\n\nshow ip ospf interface brief\nInterface    Area    Cost  State\nEthernet0/0  0       10    DR\nVlan10       1       10    DR\n",
+      "expected_fault": "OSPF neighbor 10.0.0.2 is stuck in INIT state due to an area mismatch (area 0 vs area 1)",
+      "expected_command": "show ip ospf neighbor",
+      "expected_fix": "Put both interfaces in the same OSPF area",
+      "difficulty": "hard"
+    },
+    {
+      "case_id": "NETSAGE-030",
+      "category": "Wireless",
+      "title": "Corporate SSID mapped to the wrong VLAN",
+      "symptom": "Wireless clients connecting to the CORP SSID receive an IP in the guest subnet and cannot reach corporate resources.",
+      "topology": "The CORP SSID (CORP-WiFi) is mapped to VLAN 999 (guest) instead of VLAN 10 (corporate).",
+      "show_output": "show dot11 ssid\nSSID         Vlan     Status\nCORP-WiFi    999      Active\nGUEST-WiFi   999      Active\n\nshow running-config | section ssid\ndot11 ssid CORP-WiFi\n   vlan 999\n   authentication open\n\nshow ip dhcp snooping binding\nMac Address          IP address        Lease(sec)  Type           Vlan  Interface\n0011.2233.4400       192.168.99.50     86400       dhcp-snooping  999   Fa0/8\n",
+      "expected_fault": "CORP-WiFi SSID maps to VLAN 999 (guest) instead of VLAN 10 (corporate); clients get a guest IP",
+      "expected_command": "show dot11 ssid",
+      "expected_fix": "Map CORP-WiFi to the correct corporate VLAN: vlan 10 under the ssid",
+      "difficulty": "hard"
+    }
+  ],
+  "difficulty_distribution": {
+    "NETSAGE-001": "easy",
+    "NETSAGE-002": "easy",
+    "NETSAGE-003": "hard",
+    "NETSAGE-004": "medium",
+    "NETSAGE-005": "medium",
+    "NETSAGE-006": "easy",
+    "NETSAGE-007": "medium",
+    "NETSAGE-008": "medium",
+    "NETSAGE-009": "easy",
+    "NETSAGE-010": "easy",
+    "NETSAGE-011": "medium",
+    "NETSAGE-012": "medium",
+    "NETSAGE-013": "hard",
+    "NETSAGE-014": "easy",
+    "NETSAGE-015": "hard",
+    "NETSAGE-016": "hard",
+    "NETSAGE-017": "easy",
+    "NETSAGE-018": "medium",
+    "NETSAGE-019": "easy",
+    "NETSAGE-020": "hard",
+    "NETSAGE-021": "medium",
+    "NETSAGE-022": "easy",
+    "NETSAGE-023": "medium",
+    "NETSAGE-024": "medium",
+    "NETSAGE-025": "hard",
+    "NETSAGE-026": "easy",
+    "NETSAGE-027": "medium",
+    "NETSAGE-028": "hard",
+    "NETSAGE-029": "medium",
+    "NETSAGE-030": "hard"
+  },
+  "category_counts": {
+    "VLAN": 5,
+    "Default Gateway": 4,
+    "DHCP": 4,
+    "DNS": 3,
+    "Routing": 5,
+    "ACL": 4,
+    "NAT": 3,
+    "Wireless": 2
+  }
+}

@@ -1,0 +1,33 @@
+NetSage-AI Evaluation Summary
+  Methodology: deterministic pipeline (MockProvider, no network/API/GPU).
+  Ground truth used ONLY here, for oracle labels (see evaluation/ground_truth.py).
+  cases evaluated  : 30
+  rule-checker accuracy        : 50.0%
+  AI concept addressed          : 93.3%
+  AI sentiment correct          : 23.3%
+  AI text exact match (mock*)   : 100.0%
+  AI osi layer match            : 100.0%
+  AI severity match             : 100.0%
+  correlation correctness       : 30.0%
+  conflict precision/recall/F1  : 0.3/0.5/0.375
+  review-recommendation accuracy: 53.3%
+  review coverage               : 100.0%
+
+  * MockProvider echoes expected_fault verbatim; 100% text match reflects the
+    demo provider, not live AI.
+
+Per-category:
+  ACL        n=4    checker=100.0%  ai_sent=25.0%  corr=0.0%  rec=75.0%  conf=0.492
+  DHCP       n=4    checker=50.0%  ai_sent=75.0%  corr=25.0%  rec=50.0%  conf=0.228
+  DNS        n=3    checker=0.0%  ai_sent=33.3%  corr=0.0%  rec=33.3%  conf=0.25
+  Default Gateway n=4    checker=50.0%  ai_sent=25.0%  corr=25.0%  rec=25.0%  conf=0.525
+  NAT        n=3    checker=33.3%  ai_sent=0.0%  corr=0.0%  rec=33.3%  conf=0.38
+  Routing    n=5    checker=60.0%  ai_sent=0.0%  corr=20.0%  rec=40.0%  conf=0.358
+  VLAN       n=5    checker=60.0%  ai_sent=20.0%  corr=80.0%  rec=80.0%  conf=0.354
+  Wireless   n=2    checker=0.0%  ai_sent=0.0%  corr=100.0%  rec=100.0%  conf=0.125
+
+Correlation status confusion (rows=expected, cols=actual):
+  INSUFFICIENT_EVIDENCE CONFLICT=3  INSUFFICIENT_EVIDENCE=2  PARTIAL_AGREEMENT=6
+  CONFLICT              CONFLICT=5  PARTIAL_AGREEMENT=5
+  PARTIAL_AGREEMENT     CONFLICT=2  INSUFFICIENT_EVIDENCE=2  PARTIAL_AGREEMENT=2
+  AGREEMENT             PARTIAL_AGREEMENT=3

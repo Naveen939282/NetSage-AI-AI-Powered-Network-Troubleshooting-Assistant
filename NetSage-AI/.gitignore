@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+*.egg
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Streamlit / runtime caches
+.streamlit/
+
+# Outputs (runtime-generated; keep .gitkeep)
+outputs/*
+!outputs/.gitkeep
+
+# OS
+Thumbs.db

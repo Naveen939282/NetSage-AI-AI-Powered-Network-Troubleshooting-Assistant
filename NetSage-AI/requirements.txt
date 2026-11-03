@@ -1,0 +1,7 @@
+# NetSage-AI — minimal dependencies
+streamlit>=1.30
+pandas>=2.0
+pydantic>=2.0
+plotly>=5.0
+pytest>=7.0
+python-dotenv>=1.0

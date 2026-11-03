@@ -1,0 +1,325 @@
+case_id,category,title,symptom,topology,show_output,expected_fault,osi_layer,concept,severity,expected_command,expected_fix
+NETSAGE-001,VLAN,Wrong access VLAN assigned to host port,PC-A (192.168.20.10/24) cannot reach servers in VLAN 20. The host replies to ping within its own IP but cannot reach 192.168.20.2. PC-A should be in the SERVERS VLAN (20).,PC-A -- Gi0/2 -- SwitchA -- Gi0/1 -- RouterB. Intended: PC-A belongs to VLAN 20 (SERVERS).,"show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -----------------------------
+1    default                          active
+10   USERS                            active    Fa0/2 Fa0/3
+20   SERVERS                          active    Fa0/5
+
+show interfaces status
+Port      Name               Status       Vlan       Duplex Speed   Type
+Gi0/1     trunk-to-RouterB   connected    trunk      a-full  a-1000  1000BaseSX
+Gi0/2     to-PC-A            connected    10         a-full  a-1000
+Gi0/3                        connected    10         a-full  a-1000
+Gi0/5                        connected    20         a-full  a-1000
+
+show interfaces switchport
+Name               : Gi0/2
+Switchport Mode      : access
+Access Mode VLAN     : 10
+",Port Gi0/2 is assigned to access VLAN 10 (USERS) instead of VLAN 20 (SERVERS),Layer 2,access vlan assignment,HIGH,show interfaces Gi0/2 status,"On SwitchA, enter interface Gi0/2 and run: switchport access vlan 20"
+NETSAGE-002,VLAN,VLAN 30 missing from the switch database,Hosts that should be in VLAN 30 (DB) cannot communicate. Port Gi0/4 is configured for VLAN 30 but shows notconnect.,SwitchA is meant to host VLAN 30 (DB) on Gi0/4. Only VLANs 10 and 20 exist in the VLAN database.,"show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -----------------------------
+1    default                          active
+10   USERS                            active    Fa0/2
+20   SERVERS                          active    Fa0/3
+
+show interfaces status
+Port      Name               Status       Vlan       Duplex Speed   Type
+Gi0/1     trunk            connected    trunk      a-full  a-1000
+Gi0/2                        connected    10         a-full  a-1000
+Gi0/3                        connected    20         a-full  a-1000
+Gi0/4     to-DB-host         notconnect   30         auto    auto
+
+show interfaces switchport
+Name                : Gi0/4
+Administrative Mode : static access
+Access Mode VLAN    : 30
+","VLAN 30 is not present in the VLAN database, yet Gi0/4 is configured for access VLAN 30",Layer 2,vlan creation,HIGH,show vlan brief,Create the missing VLAN: vlan 30 ; name DB ; exit
+NETSAGE-003,VLAN,Trunk permits only VLANs 10 and 20,Servers in VLAN 30 (DB) are reachable from the local switch but not across the inter-switch trunk. Traffic appears blocked over the trunk link.,SwitchA and SwitchB are interconnected by a trunk on Gi0/1. VLAN 30 exists for database servers but may not be allowed on the trunk.,"show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -----------------------------
+10   USERS                            active    Fa0/2 Fa0/1
+20   SERVERS                          active    Fa0/3 Fa0/1
+30   DB                               active    Fa0/5
+
+show interfaces trunk
+Port        Mode          Encapsulation Status        Native Vlan  Vlans Allowed on Trunk
+Gi0/1       desirable     802.1q        operational 1            10,20
+",Trunk Gi0/1 allows only VLANs 10 and 20; VLAN 30 is missing from the allowed-vlan list,Layer 2,trunk allowed vlan,MEDIUM,show interfaces trunk,Add VLAN 30 to the trunk: switchport trunk allowed vlan add 30
+NETSAGE-004,VLAN,Native VLAN mismatch on trunk,Intermittent connectivity and a flapping trunk. Some frames are dropped across the SwitchA-SwitchB trunk link.,SwitchA Gi0/1 trunks to SwitchB Gi0/1. The native VLAN must match on both ends (SwitchB uses 999).,"show interfaces trunk
+Port        Mode          Encapsulation Status        Native Vlan  Vlans Allowed on Trunk
+Gi0/1       trunk         802.1q        operational 1            10,20,30
+
+show interfaces switchport
+Name                : Gi0/1
+Switchport Mode      : trunk
+Administrative Native Vlan : 1
+Operational Native Vlan    : 1
+",Native VLAN mismatch: SwitchA uses native VLAN 1 while SwitchB is configured for native VLAN 999,Layer 2,native vlan mismatch,HIGH,show interfaces trunk,Configure a matching native VLAN on both ends (e.g. switchport trunk native vlan 999)
+NETSAGE-005,VLAN,Newly created VLAN not added to trunk allowed list,"After creating VLAN 40 for a new office, hosts there cannot reach the rest of the network through the trunk.",SwitchA trunk to SwitchB. VLAN 40 was created on SwitchA only and not permitted on the trunk.,"show vlan brief
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -----------------------------
+10   USERS                            active    Fa0/2 Fa0/1
+20   SERVERS                          active    Fa0/3 Fa0/1
+40   NEW-OFFICE                       active    Fa0/6
+
+show interfaces trunk
+Port        Mode          Encapsulation Status        Native Vlan  Vlans Allowed on Trunk
+Gi0/1       trunk         802.1q        operational 1            10,20
+",VLAN 40 exists in the VLAN database but is not permitted on the trunk Gi0/1,Layer 2,trunk allowed vlan,MEDIUM,show interfaces trunk,Allow VLAN 40 on the trunk: switchport trunk allowed vlan add 40
+NETSAGE-006,Default Gateway,Incorrect default gateway IP on host,Host 192.168.10.50 can reach local VLAN resources but nothing beyond the local subnet.,Host 192.168.10.50/24 with a mis-configured default gateway (192.168.10.254 instead of the real .1).,"show ip route
+S*   0.0.0.0/0 [1/0] via 192.168.10.254
+C    192.168.10.0/24 is directly connected, Vlan10
+
+show ip interface brief
+Interface              IP-Address      OK? Method Protocol Interface
+Vlan10                 192.168.10.50   YES manual up     up
+",Default gateway 192.168.10.254 is not responding; the correct gateway is 192.168.10.1,Layer 3,default gateway,HIGH,ping 192.168.10.1,Configure the host default gateway to 192.168.10.1
+NETSAGE-007,Default Gateway,Default gateway outside host subnet,Host 192.168.20.15 cannot reach any external network; the configured default gateway is unreachable.,"Host 192.168.20.15/24 has gateway 192.168.10.1, which is outside its subnet.","show ip route
+S*   0.0.0.0/0 [1/0] via 192.168.10.1
+C    192.168.20.0/24 is directly connected, Vlan20
+C    10.0.0.0/24 is directly connected, Ethernet0/0
+
+show ip interface brief
+Interface              IP-Address      OK? Method Protocol Interface
+Vlan20                 192.168.20.15   YES manual up     up
+",Default gateway 192.168.10.1 is outside the host subnet 192.168.20.0/24,Layer 3,gateway outside subnet,HIGH,show ip route,Set the gateway to an address within 192.168.20.0/24 (e.g. 192.168.20.1)
+NETSAGE-008,Default Gateway,SVI administratively down disables the gateway,All hosts in VLAN 30 lose default-gateway connectivity; the VLAN 30 SVI is not forwarding.,The Vlan30 SVI on the Layer 3 switch is administratively down.,"show ip interface brief
+Interface              IP-Address      OK? Method Protocol Interface
+Vlan30                 192.168.30.1    YES manual administratively down down
+
+show interfaces Vlan30
+Vlan30 is administratively down, line protocol is down
+  Hardware is iGbE, address is 5000.0001.0001
+  Internet address is 192.168.30.1/24
+
+show ip route
+S*   0.0.0.0/0 [1/0] via 192.168.10.1
+C    192.168.10.0/24 is directly connected, Vlan10
+","The Vlan30 SVI (192.168.30.1) is administratively down, so it cannot act as a gateway",Layer 3,interface administratively down,HIGH,show ip interface brief,Re-enable the SVI: interface Vlan30 ; no shutdown
+NETSAGE-009,Default Gateway,No default gateway or default route on host,Host 192.168.40.20 has no default route; it can only reach its local VLAN 40.,Host 192.168.40.20/24 with no ip route 0.0.0.0/0 and no default-gateway statement.,"show ip route
+C    192.168.40.0/24 is directly connected, Vlan40
+
+show ip interface brief
+Interface              IP-Address      OK? Method Protocol Interface
+Vlan40                 192.168.40.20   YES manual up     up
+",No default route (0.0.0.0/0 / S*) exists in the routing table,Layer 3,default gateway,HIGH,show ip route,Add a default route: ip route 0.0.0.0 0.0.0.0 192.168.40.1
+NETSAGE-010,DHCP,DHCP pool missing for a VLAN,Clients in VLAN 10 (192.168.10.0/24) receive APIPA addresses 169.254.x.x instead of 192.168.10.x.,"The DHCP server has pools for VLAN 20 and 30 but none for VLAN 10, even though Vlan10 has an SVI.","show ip route
+C    192.168.10.0/24 is directly connected, Vlan10
+C    192.168.20.0/24 is directly connected, Vlan20
+
+show ip dhcp pool
+Pool VLAN20-POOL: 192.168.20.0/24 192.168.20.10-192.168.20.29 used 1 free 19
+
+show ip dhcp binding
+IP address      Hardware address   Type        Lease
+192.168.20.10   0001.0c10.000a    Automatic   86400
+",No DHCP pool is configured for the VLAN 10 (192.168.10.0/24) subnet,Layer 7,dhcp pool,HIGH,show ip dhcp pool,Create a pool: ip dhcp pool VLAN10-POOL ; network 192.168.10.0 255.255.255.0 ; default-router 192.168.10.1
+NETSAGE-011,DHCP,Excluded address range overlaps the DHCP pool,Some hosts in VLAN 20 receive duplicate-IP warnings; the DHCP server can hand out a reserved address.,The DHCP pool for VLAN 20 includes addresses that overlap with the excluded-address range.,"show ip dhcp pool
+Pool VLAN20-POOL: 192.168.20.0/24 192.168.20.1-192.168.20.20 used 2 free 18
+
+show ip dhcp excluded-address
+192.168.20.10 - 192.168.20.15
+
+show ip dhcp binding
+IP address      Hardware address   Type        Lease
+192.168.20.12   0001.0c10.0012    Automatic   86400
+",Excluded range 192.168.20.10-15 overlaps the DHCP pool range 192.168.20.1-20,Layer 7,dhcp excluded address,MEDIUM,show ip dhcp excluded-address,Remove the overlap so the excluded range and the pool range do not intersect
+NETSAGE-012,DHCP,DHCP relay (ip helper) missing on SVI,VLAN 30 clients do not get an IP address. The DHCP server lives on VLAN 10 and the relay agent was removed.,DHCP server on Vlan10 (192.168.10.5). VLAN 30 (192.168.30.0/24) has no ip helper-address.,"show running-config | section interface
+interface Vlan10
+ ip address 192.168.10.1 255.255.255.0
+ ip helper-address 192.168.10.5
+interface Vlan30
+ ip address 192.168.30.1 255.255.255.0
+ no ip helper-address
+
+show ip dhcp server statistics
+Total DHCP packet count: 0
+",Vlan30 is missing ip helper-address pointing to the DHCP server 192.168.10.5,Layer 3,dhcp relay,HIGH,show running-config interface Vlan30,Add under interface Vlan30: ip helper-address 192.168.10.5
+NETSAGE-013,DHCP,DHCP scope exhausted - no free addresses,New VLAN 40 clients fail to get an IP address; existing clients renew fine. The pool appears full.,DHCP pool for VLAN 40 has size 5 and is fully utilized.,"show ip dhcp pool
+Pool VLAN40-POOL: 192.168.40.0/24 192.168.40.10-192.168.40.14 used 5 free 0
+
+show ip dhcp binding
+IP address      Hardware address   Type        Lease
+192.168.40.10   0001.0c10.0020    Automatic   86400
+192.168.40.11   0001.0c10.0021    Automatic   86400
+192.168.40.12   0001.0c10.0022    Automatic   86400
+192.168.40.13   0001.0c10.0023    Automatic   86400
+192.168.40.14   0001.0c10.0024    Automatic   86400
+","DHCP pool VLAN40-POOL is fully allocated (5 of 5 used), leaving no free addresses",Layer 7,dhcp scope exhausted,MEDIUM,show ip dhcp pool,Expand the pool size or reduce excluded addresses so free addresses are available
+NETSAGE-014,DNS,DNS server unreachable (no route),Clients can ping 8.8.8.8 but cannot resolve hostnames; DNS queries time out.,DNS server 10.0.0.10 is configured but there is no route to the 10.0.0.0/8 network.,"show ip dns
+DNS Servers: 10.0.0.10
+Domain: company.local
+
+show ip route
+S*   0.0.0.0/0 [1/0] via 192.168.10.1
+C    192.168.10.0/24 is directly connected, Vlan10
+
+show ip arp
+Internet  192.168.10.1     0   001b.638a.0101   ARPA   Vlan10
+Internet  192.168.10.50    0   001b.638a.0402   ARPA   Vlan10
+",Configured DNS server 10.0.0.10 is not in any directly-connected subnet and has no route to it,Layer 7,dns server unreachable,MEDIUM,show ip route 10.0.0.10,Add a route to the DNS server subnet or change the DNS server to a reachable IP
+NETSAGE-015,DNS,DNS server host not responding,Host resolves old records; the primary DNS server returns stale data and should be decommissioned.,"Primary DNS 192.168.10.99 is no longer alive; the active server is 192.168.10.50, but the host still lists .99 first.","show ip dns
+Primary DNS Server: 192.168.10.99
+Secondary DNS Server: 192.168.10.50
+Domain: company.local
+
+show ip arp
+Internet  192.168.10.50    0   001b.638a.0402   ARPA   Vlan10
+Internet  192.168.10.51    5   001b.638a.0403   ARPA   Vlan10
+
+show ip route
+C    192.168.10.0/24 is directly connected, Vlan10
+",Configured primary DNS server 192.168.10.99 is absent from the ARP table (host not responding),Layer 7,incorrect dns configuration,HIGH,ping 192.168.10.99,Remove the stale DNS server 192.168.10.99 and use 192.168.10.50
+NETSAGE-016,DNS,Secondary DNS server unreachable (split config),"Some clients resolve, others do not. DNS works intermittently depending on which server answers.",Two DNS servers configured; the primary (192.168.50.10) responds but the secondary (192.168.99.10) is unreachable.,"show ip dns
+Primary DNS Server: 192.168.50.10
+Secondary DNS Server: 192.168.99.10
+Domain: company.local
+
+show ip arp
+Internet  192.168.50.10    0   001b.638a.0510   ARPA   Vlan50
+Internet  192.168.50.1     0   001b.638a.0501   ARPA   Vlan50
+
+show ip route
+C    192.168.50.0/24 is directly connected, Vlan50
+",Secondary DNS server 192.168.99.10 is not in the ARP table and not in any connected subnet,Layer 7,dns configuration,MEDIUM,ping 192.168.99.10,Point all clients to the reachable DNS server or restore routing to 192.168.99.10
+NETSAGE-017,Routing,Static route with unreachable next-hop,Hosts in 192.168.10.0/24 cannot reach the 192.168.50.0/24 subnet even though a static route is configured.,"RouterA has a static route for 192.168.50.0/24 via next-hop 172.16.1.1, which is not directly connected.","show ip route
+C    192.168.10.0/24 is directly connected, Vlan10
+C    10.0.0.0/24 is directly connected, Ethernet0/0
+S    192.168.50.0/24 [1/0] via 172.16.1.1
+S*   0.0.0.0/0 [1/0] via 192.168.10.254
+",Static route 192.168.50.0/24 via 172.16.1.1 has an unreachable next-hop (not directly connected),Layer 3,invalid next hop,HIGH,show ip route,Correct the next-hop to a reachable address (e.g. via 192.168.10.254)
+NETSAGE-018,Routing,Incorrect next-hop in static route,The 192.168.50.0/24 subnet is reachable but only intermittently; packets sometimes time out.,"Static route 192.168.50.0/24 points to next-hop 192.168.99.1, but the correct next-hop is 192.168.99.254.","show ip route
+C    192.168.10.0/24 is directly connected, Vlan10
+C    192.168.99.0/24 is directly connected, Ethernet0/1
+S    192.168.50.0/24 [1/0] via 192.168.99.1
+S*   0.0.0.0/0 [1/0] via 192.168.10.254
+",Static route 192.168.50.0/24 uses next-hop 192.168.99.1 instead of the correct 192.168.99.254,Layer 3,incorrect static route,MEDIUM,show ip route,ip route 192.168.50.0 255.255.255.0 192.168.99.254
+NETSAGE-019,Routing,Default route missing,The router can reach local and one static subnet but cannot forward traffic to the internet.,RouterB has no default route (0.0.0.0/0) configured.,"show ip route
+C    192.168.10.0/24 is directly connected, Vlan10
+C    192.168.20.0/24 is directly connected, Ethernet0/0
+S    192.168.50.0/24 [1/0] via 192.168.10.254
+",No default route (0.0.0.0/0 / S*) exists in the routing table,Layer 3,default route missing,HIGH,show ip route,Add a default route: ip route 0.0.0.0 0.0.0.0 192.168.10.254
+NETSAGE-020,Routing,OSPF neighbor stuck in INIT (area mismatch),Routes are not being learned via OSPF; the neighbor stays in a non-FULL state.,RouterA and RouterB form an OSPF adjacency that never reaches FULL due to an area mismatch.,"show ip ospf neighbor
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+10.0.0.2        128   INIT/DROTHER    00:00:05    3               Ethernet0/0
+
+show ip ospf interface brief
+Interface    Area    Cost  State
+Ethernet0/0  0       10    DR
+Vlan10       1       10    DR
+",OSPF neighbor 10.0.0.2 is stuck in INIT state due to an area mismatch (area 0 vs area 1),Layer 3,ospf area mismatch,HIGH,show ip ospf neighbor,Put both interfaces in the same OSPF area
+NETSAGE-021,Routing,Wrong next-hop causing a blackhole,The 192.168.50.0/24 subnet is intermittently unreachable; the configured next-hop host does not respond.,Static route 192.168.50.0/24 via 172.16.5.6; the correct next-hop router is 172.16.5.254.,"show ip route
+C    192.168.10.0/24 is directly connected, Vlan10
+C    172.16.5.0/24 is directly connected, Ethernet0/1
+S    192.168.50.0/24 [1/0] via 172.16.5.6
+S*   0.0.0.0/0 [1/0] via 192.168.10.254
+","Static route 192.168.50.0/24 uses next-hop 172.16.5.6, which does not respond (blackhole)",Layer 3,wrong next hop,MEDIUM,ping 172.16.5.6,ip route 192.168.50.0 255.255.255.0 172.16.5.254
+NETSAGE-022,ACL,ACL deny rule blocking inter-VLAN traffic,Hosts in 192.168.10.0/24 cannot reach servers in 192.168.20.0/24. ICMP and TCP are blocked.,ACL 100 applied to the inter-VLAN routed interface denies the 10->20 traffic before the permit rule.,"show access-lists
+Extended IP access list 100
+    10 deny   ip 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255
+    20 permit ip any any
+",ACL 100 sequence 10 denies ip 192.168.10.0/24 -> 192.168.20.0/24 before the permit,Layer 3,acl deny rule,HIGH,show access-lists,Reorder or remove the deny rule so 10->20 traffic is permitted
+NETSAGE-023,ACL,ACL applied to the wrong interface,Inbound traffic toward servers is filtered unexpectedly; the ACL is bound to the host-facing port instead of the server-facing port.,ACL 110 should be on Gi0/2 (servers) but is applied to Gi0/1 (hosts).,"show access-lists
+Extended IP access list 110
+    10 permit tcp 192.168.10.0 0.0.0.255 any eq 80
+    20 deny   ip any any
+
+show ip interface
+GigabitEthernet0/1
+    Inbound access list: 110
+    Outbound access list: not set
+GigabitEthernet0/2
+    Inbound access list: not set
+    Outbound access list: not set
+",ACL 110 is applied inbound on Gi0/1 instead of the server-facing Gi0/2,Layer 3,acl wrong interface,MEDIUM,show ip interface,Move the ACL: no ip access-group 110 in on Gi0/1; ip access-group 110 in on Gi0/2
+NETSAGE-024,ACL,ACL applied in the wrong direction,Return traffic is being dropped; the ACL direction (in/out) is inverted on the edge interface.,ACL 120 should be inbound to filter inbound connections but is applied outbound on Gi0/1.,"show access-lists
+Extended IP access list 120
+    10 permit tcp 192.168.10.0 0.0.0.255 any established
+    20 deny   tcp 192.168.10.0 0.0.0.255 any
+
+show ip interface
+GigabitEthernet0/1
+    Inbound access list: not set
+    Outbound access list: 120
+",ACL 120 is applied outbound on Gi0/1; filtering should be inbound,Layer 3,acl direction,MEDIUM,show ip interface,Remove outbound and apply inbound: no ip access-group 120 out; ip access-group 120 in
+NETSAGE-025,ACL,ACL implicit/explicit deny blocks a new application,"After an ACL change, a newly-deployed application on port 8443 stops working for some users.",ACL 130 permits only SSH and HTTP then denies all other traffic; the new app uses port 8443.,"show access-lists
+Extended IP access list 130
+    10 permit tcp 192.168.10.0 0.0.0.255 any eq 22
+    20 permit tcp 192.168.10.0 0.0.0.255 any eq 80
+    30 deny   ip any any
+
+show ip interface
+GigabitEthernet0/1
+    Inbound access list: 130
+","ACL 130 denies all traffic except SSH and HTTP, blocking the new application on port 8443",Layer 3,implicit deny,HIGH,show access-lists,Permit the new application: permit tcp 192.168.10.0 0.0.0.255 any eq 8443
+NETSAGE-026,NAT,NAT not configured on the edge router,Internal hosts (192.168.0.0/16) cannot reach the internet; no NAT translations are occurring.,The edge router has no NAT configuration; internal addresses are sent untranslated.,"show ip nat statistics
+Total translations: 0
+Active inside mappings: 0
+Outside mappings: 0
+
+show ip nat translations
+Pro  Inside global      Inside local       Outside local      Outside global
+
+show running-config | section ip nat
+
+",No NAT configuration exists; translations count is 0 and no inside/outside interfaces are defined,Layer 3,nat missing,HIGH,show ip nat statistics,Configure NAT: mark inside/outside interfaces and ip nat inside source list 1 interface ... overload
+NETSAGE-027,NAT,NAT inside/outside interface roles swapped,NAT translations are failing; the inside and outside interface designations appear reversed.,"Gi0/0 (10.0.0.1, internal) is marked outside; Gi0/1 (203.0.113.1, external) is marked inside.","show running-config | section interface
+interface GigabitEthernet0/0
+ ip address 10.0.0.1 255.255.255.0
+ ip nat outside
+interface GigabitEthernet0/1
+ ip address 203.0.113.1 255.255.255.0
+ ip nat inside
+
+ip nat inside source list NAT-ACL interface GigabitEthernet0/1 overload
+","Gi0/0 (10.0.0.1, private) is marked ip nat outside and Gi0/1 (203.0.113.1, public) is marked ip nat inside; roles are swapped",Layer 3,nat inside outside,HIGH,show running-config interface,"Swap the roles: Gi0/0 ip nat inside, Gi0/1 ip nat outside"
+NETSAGE-028,NAT,NAT ACL matches only a subset of the inside network,Only some internal hosts are translated and can reach the internet; the rest are not translated.,The inside network is 192.168.0.0/16 but the NAT ACL only permits 192.168.10.0/24.,"show running-config | section interface
+interface GigabitEthernet0/1
+ ip address 192.168.0.1 255.255.0.0
+ ip nat inside
+interface GigabitEthernet0/0
+ ip address 203.0.113.1 255.255.255.0
+ ip nat outside
+
+ip nat inside source list NAT-ACL interface GigabitEthernet0/0 overload
+
+show access-lists
+Extended IP access list NAT-ACL
+    10 permit ip 192.168.10.0 0.0.0.255 any
+    20 deny   ip any any
+
+show ip nat statistics
+Total translations: 1
+show ip nat translations
+Pro  Inside global      Inside local       Outside local      Outside global
+     203.0.113.1:1024   192.168.10.5:1024  0.0.0.0:0          0.0.0.0:0
+",NAT ACL permits only 192.168.10.0/24 while the inside interface is 192.168.0.0/16; 192.168.20.0/24 and beyond are not translated,Layer 3,nat acl mismatch,MEDIUM,show access-lists NAT-ACL,Broaden the NAT ACL: permit ip 192.168.0.0 0.0.255.255 any
+NETSAGE-029,Wireless,Guest wireless clients can reach each other,Guest wireless clients can communicate with each other and can ping internal hosts; client isolation is not enforced on the guest SSID.,A guest SSID (GUEST-WiFi) maps to VLAN 999; private-vlan / client isolation is not configured.,"show wireless client summary
+Number of Clients: 4
+MAC Address        Vlan       SSID        State
+0011.2233.4455     999        GUEST-WiFi  Associated
+0022.3344.5566     999        GUEST-WiFi  Associated
+
+show running-config | section guest
+dot11 ssid GUEST-WiFi
+   vlan 999
+   guest-mode
+   authentication open
+",Guest SSID GUEST-WiFi has no client isolation / private-vlan configured; clients in VLAN 999 can intercommunicate,Layer 2,wireless client isolation,HIGH,show wireless client summary,Enable client isolation or a private-vlan host on the guest SSID and switch ports
+NETSAGE-030,Wireless,Corporate SSID mapped to the wrong VLAN,Wireless clients connecting to the CORP SSID receive an IP in the guest subnet and cannot reach corporate resources.,The CORP SSID (CORP-WiFi) is mapped to VLAN 999 (guest) instead of VLAN 10 (corporate).,"show dot11 ssid
+SSID         Vlan     Status
+CORP-WiFi    999      Active
+GUEST-WiFi   999      Active
+
+show running-config | section ssid
+dot11 ssid CORP-WiFi
+   vlan 999
+   authentication open
+
+show ip dhcp snooping binding
+Mac Address          IP address        Lease(sec)  Type           Vlan  Interface
+0011.2233.4400       192.168.99.50     86400       dhcp-snooping  999   Fa0/8
+",CORP-WiFi SSID maps to VLAN 999 (guest) instead of VLAN 10 (corporate); clients get a guest IP,Layer 2,wireless vlan mapping,HIGH,show dot11 ssid,Map CORP-WiFi to the correct corporate VLAN: vlan 10 under the ssid

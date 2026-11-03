@@ -1,0 +1,1249 @@
+{
+  "generated_at": "20260816T060008Z",
+  "run_id": "netsagai",
+  "num_cases": 30,
+  "aggregate": {
+    "overall": {
+      "num_cases": 30,
+      "rule_checker_accuracy": 0.5,
+      "ai_concept_addressed_rate": 0.9333,
+      "ai_sentiment_correct_rate": 0.2333,
+      "ai_text_exact_match_rate": 1.0,
+      "ai_osi_match_rate": 1.0,
+      "ai_severity_match_rate": 1.0,
+      "correlation_correct_rate": 0.3,
+      "conflict_precision": 0.3,
+      "conflict_recall": 0.5,
+      "conflict_f1": 0.375,
+      "review_recommendation_accuracy": 0.5333,
+      "review_coverage": 1.0
+    },
+    "category": {
+      "VLAN": {
+        "n": 5,
+        "rule_checker_accuracy": 0.6,
+        "ai_sentiment_correct_rate": 0.2,
+        "correlation_correct_rate": 0.8,
+        "review_recommendation_accuracy": 0.8,
+        "average_confidence": 0.354
+      },
+      "Default Gateway": {
+        "n": 4,
+        "rule_checker_accuracy": 0.5,
+        "ai_sentiment_correct_rate": 0.25,
+        "correlation_correct_rate": 0.25,
+        "review_recommendation_accuracy": 0.25,
+        "average_confidence": 0.525
+      },
+      "DHCP": {
+        "n": 4,
+        "rule_checker_accuracy": 0.5,
+        "ai_sentiment_correct_rate": 0.75,
+        "correlation_correct_rate": 0.25,
+        "review_recommendation_accuracy": 0.5,
+        "average_confidence": 0.2275
+      },
+      "DNS": {
+        "n": 3,
+        "rule_checker_accuracy": 0.0,
+        "ai_sentiment_correct_rate": 0.3333,
+        "correlation_correct_rate": 0.0,
+        "review_recommendation_accuracy": 0.3333,
+        "average_confidence": 0.25
+      },
+      "Routing": {
+        "n": 5,
+        "rule_checker_accuracy": 0.6,
+        "ai_sentiment_correct_rate": 0.0,
+        "correlation_correct_rate": 0.2,
+        "review_recommendation_accuracy": 0.4,
+        "average_confidence": 0.358
+      },
+      "ACL": {
+        "n": 4,
+        "rule_checker_accuracy": 1.0,
+        "ai_sentiment_correct_rate": 0.25,
+        "correlation_correct_rate": 0.0,
+        "review_recommendation_accuracy": 0.75,
+        "average_confidence": 0.4925
+      },
+      "NAT": {
+        "n": 3,
+        "rule_checker_accuracy": 0.3333,
+        "ai_sentiment_correct_rate": 0.0,
+        "correlation_correct_rate": 0.0,
+        "review_recommendation_accuracy": 0.3333,
+        "average_confidence": 0.38
+      },
+      "Wireless": {
+        "n": 2,
+        "rule_checker_accuracy": 0.0,
+        "ai_sentiment_correct_rate": 0.0,
+        "correlation_correct_rate": 1.0,
+        "review_recommendation_accuracy": 1.0,
+        "average_confidence": 0.125
+      }
+    },
+    "correlation_confusion": {
+      "INSUFFICIENT_EVIDENCE": {
+        "PARTIAL_AGREEMENT": 6,
+        "CONFLICT": 3,
+        "INSUFFICIENT_EVIDENCE": 2
+      },
+      "CONFLICT": {
+        "CONFLICT": 5,
+        "PARTIAL_AGREEMENT": 5
+      },
+      "PARTIAL_AGREEMENT": {
+        "PARTIAL_AGREEMENT": 2,
+        "INSUFFICIENT_EVIDENCE": 2,
+        "CONFLICT": 2
+      },
+      "AGREEMENT": {
+        "PARTIAL_AGREEMENT": 3
+      }
+    }
+  },
+  "per_case": [
+    {
+      "case_id": "NETSAGE-001",
+      "category": "VLAN",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "vlan"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.61,
+        "ai_support": "SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-002",
+      "category": "VLAN",
+      "rule_checker": {
+        "hit": true,
+        "findings": 4,
+        "relevant": 1,
+        "precision": 0.25,
+        "recall": 1.0,
+        "expected_concept": "vlan"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "CONFLICT",
+        "correct": true,
+        "confidence": 0.28,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-003",
+      "category": "VLAN",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "vlan"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "CONFLICT",
+        "correct": true,
+        "confidence": 0.2,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": true,
+        "flagged": true,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-004",
+      "category": "VLAN",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "vlan"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "PARTIAL_AGREEMENT",
+        "correct": true,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-005",
+      "category": "VLAN",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "vlan"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "CONFLICT",
+        "correct": true,
+        "confidence": 0.2,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": true,
+        "flagged": true,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-006",
+      "category": "Default Gateway",
+      "rule_checker": {
+        "hit": false,
+        "findings": 1,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "gateway"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.54,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-007",
+      "category": "Default Gateway",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "gateway"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "AGREEMENT",
+        "correct": false,
+        "confidence": 0.54,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "ACCEPT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-008",
+      "category": "Default Gateway",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "gateway"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.51,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-009",
+      "category": "Default Gateway",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "gateway"
+      },
+      "ai_diagnosis": {
+        "addressed": false,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "PARTIAL_AGREEMENT",
+        "correct": true,
+        "confidence": 0.51,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-010",
+      "category": "DHCP",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "dhcp"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "CONFLICT",
+        "correct": true,
+        "confidence": 0.18,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-011",
+      "category": "DHCP",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "dhcp"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "AGREEMENT",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "ACCEPT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-012",
+      "category": "DHCP",
+      "rule_checker": {
+        "hit": false,
+        "findings": 3,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "dhcp"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "INSUFFICIENT_EVIDENCE",
+        "expected_status": "PARTIAL_AGREEMENT",
+        "correct": false,
+        "confidence": 0.1,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "EDIT",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-013",
+      "category": "DHCP",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "dhcp"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "PARTIAL_AGREEMENT",
+        "correct": false,
+        "confidence": 0.15,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-014",
+      "category": "DNS",
+      "rule_checker": {
+        "hit": false,
+        "findings": 1,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "dns"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.26,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-015",
+      "category": "DNS",
+      "rule_checker": {
+        "hit": false,
+        "findings": 3,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "dns"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "PARTIAL_AGREEMENT",
+        "correct": false,
+        "confidence": 0.23,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-016",
+      "category": "DNS",
+      "rule_checker": {
+        "hit": false,
+        "findings": 3,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "dns"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.26,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-017",
+      "category": "Routing",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "route"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "CONFLICT",
+        "correct": true,
+        "confidence": 0.15,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": true,
+        "flagged": true,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-018",
+      "category": "Routing",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "route"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-019",
+      "category": "Routing",
+      "rule_checker": {
+        "hit": true,
+        "findings": 4,
+        "relevant": 1,
+        "precision": 0.25,
+        "recall": 1.0,
+        "expected_concept": "route"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "CONFLICT",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-020",
+      "category": "Routing",
+      "rule_checker": {
+        "hit": true,
+        "findings": 2,
+        "relevant": 1,
+        "precision": 0.5,
+        "recall": 1.0,
+        "expected_concept": "route"
+      },
+      "ai_diagnosis": {
+        "addressed": false,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "INSUFFICIENT_EVIDENCE",
+        "expected_status": "PARTIAL_AGREEMENT",
+        "correct": false,
+        "confidence": 0.2,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "EDIT",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-021",
+      "category": "Routing",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "route"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-022",
+      "category": "ACL",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "acl"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "CONFLICT",
+        "correct": false,
+        "confidence": 0.53,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": true,
+        "flagged": false,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-023",
+      "category": "ACL",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "acl"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "CONFLICT",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": true,
+        "flagged": false,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-024",
+      "category": "ACL",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "acl"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "CONFLICT",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": true,
+        "flagged": false,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-025",
+      "category": "ACL",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "acl"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": true,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "AGREEMENT",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "ACCEPT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-026",
+      "category": "NAT",
+      "rule_checker": {
+        "hit": true,
+        "findings": 3,
+        "relevant": 1,
+        "precision": 0.3333,
+        "recall": 1.0,
+        "expected_concept": "nat"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "CONFLICT",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "INVESTIGATE",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-027",
+      "category": "NAT",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "nat"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "PARTIAL_AGREEMENT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.48,
+        "ai_support": "PARTIALLY_SUPPORTED",
+        "rule_support": "PARTIALLY_SUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-028",
+      "category": "NAT",
+      "rule_checker": {
+        "hit": false,
+        "findings": 3,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "nat"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "CONFLICT",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": false,
+        "confidence": 0.18,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": true,
+        "correct": false
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "INVESTIGATE",
+        "action_correct": false,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-029",
+      "category": "Wireless",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "wireless"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "INSUFFICIENT_EVIDENCE",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": true,
+        "confidence": 0.1,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "EDIT",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    },
+    {
+      "case_id": "NETSAGE-030",
+      "category": "Wireless",
+      "rule_checker": {
+        "hit": false,
+        "findings": 2,
+        "relevant": 0,
+        "precision": 0.0,
+        "recall": 0.0,
+        "expected_concept": "wireless"
+      },
+      "ai_diagnosis": {
+        "addressed": true,
+        "sentiment_correct": false,
+        "text_exact_match": true,
+        "osi_match": true,
+        "severity_match": true
+      },
+      "correlation": {
+        "status": "INSUFFICIENT_EVIDENCE",
+        "expected_status": "INSUFFICIENT_EVIDENCE",
+        "correct": true,
+        "confidence": 0.15,
+        "ai_support": "UNSUPPORTED",
+        "rule_support": "UNSUPPORTED"
+      },
+      "conflict": {
+        "expected": false,
+        "flagged": false,
+        "correct": true
+      },
+      "review": {
+        "expected_action": "EDIT",
+        "recommended_action": "EDIT",
+        "action_correct": true,
+        "requires_human_review": true
+      }
+    }
+  ]
+}
